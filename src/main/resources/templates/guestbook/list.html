@@ -3,7 +3,15 @@
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <th:block th:fragment="content">
-        <h1>GuestBook List Page</h1>
+
+        <h1 class="mt-4">GuestBook List Page
+            <span>
+                <a th:href="@{/guestbook/register}">
+                    <button type="button" class="btn btn-outline-primary">REGISTER
+                    </button>
+                </a>
+            </span>
+        </h1>
 
         <table class="table table-striped">
             <thead>
@@ -25,7 +33,12 @@
                         [[${dto.gno}]]
                     </a>
                 </th>-->
-                <th scope="row">[[${dto.gno}]]</th>
+                <th scope="row">
+                    <a th:href="@{/guestbook/read(gno = ${dto.gno},
+                    page= ${result.page})}">
+                        [[${dto.gno}]]
+                    </a>
+                </th>
                 <td>[[${dto.title}]]</td>
                 <td>[[${dto.writer}]]</td>
                 <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
@@ -33,6 +46,37 @@
 
             </tbody>
         </table>
+
+        <ul class="pagination h-100 justify-content-center align-items-center">
+
+            <li class="page-item " th:if="${result.prev}">
+                <a class="page-link" th:href="@{/guestbook/list(page= ${result.start -1})}" tabindex="-1">Previous</a>
+            </li>
+
+            <li th:class=" 'page-item ' + ${result.page == page?'active':''} " th:each="page: ${result.pageList}">
+                <a class="page-link" th:href="@{/guestbook/list(page = ${page})}" tabindex="-1">
+                    [[${page}]]
+                </a>
+            </li>
+
+            <li class="page-item" th:if="${result.next}">
+                <a class="page-link" th:href="@{/guestbook/list(page= ${result.end +1})}" tabindex="-1">Next</a>
+            </li>
+
+        </ul>
+
+        <script th:inline="javascript">
+
+            var msg = [[${msg}]];
+
+            console.log(msg);
+
+            if(msg){
+                $(".modal").modal();
+            }
+
+        </script>
+
     </th:block>
 </th:block>
 
